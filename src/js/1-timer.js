@@ -4,10 +4,10 @@ import 'flatpickr/dist/flatpickr.min.css';
 const startBtn = document.querySelector('[data-start]');
 const stopBtn = document.querySelector('[data-stop]');
 
-const days = document.querySelector('[data-days]');
-const hours = document.querySelector('[data-hours]');
-const minutes = document.querySelector('[data-minutes]');
-const seconds = document.querySelector('[data-seconds]');
+const daysEl = document.querySelector('[data-days]');
+const hoursEl = document.querySelector('[data-hours]');
+const minutesEl = document.querySelector('[data-minutes]');
+const secondsEl = document.querySelector('[data-seconds]');
 
 let userSelectedDate;
 
@@ -42,12 +42,20 @@ console.log(convertMs(24140000));
 function pad(value) {
     return value.toString().padStart(2, '0');
 }
+console.log('Pad:', pad(5));
 
 // Function to get time difference
 function getTimeDifference(selectedDate) {
     return selectedDate - Date.now();
 }
 
+// Function to update UI
+function updateUi({ days, hours, minutes, seconds }) {
+    daysEl.textContent = pad(days);
+    hoursEl.textContent = pad(hours);
+    minutesEl.textContent = pad(minutes);
+    secondsEl.textContent = pad(seconds);
+}
 // function startCountdoun()
 
 // Timer initialization
