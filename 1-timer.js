@@ -1,2 +1,2 @@
-import"./assets/styles-CGQZsQCt.js";import{f as t}from"./assets/vendor-CCO2o_no.js";const o={enableTime:!0,time_24hr:!0,defaultDate:new Date,minDate:"today",minuteIncrement:1,onClose(e){console.log(e[0])}};t("#datetime-picker",o);
+import"./assets/styles-CGQZsQCt.js";import{f as r}from"./assets/vendor-CCO2o_no.js";const e=document.querySelector("[data-start]"),o=document.querySelector("[data-stop]");let a;e.disabled=!0;o.disabled=!0;const d={enableTime:!0,time_24hr:!0,defaultDate:new Date,minDate:"today",minuteIncrement:1,onClose(t){console.log(t[0]),a=t[0],a<new Date?(window.alert("Please choose a date in the future"),e.disabled=!0,o.disabled=!0):e.disabled=!1}};r("#datetime-picker",d);
 //# sourceMappingURL=1-timer.js.map
