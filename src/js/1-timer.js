@@ -43,6 +43,11 @@ function pad(value) {
     return value.toString().padStart(2, '0');
 }
 
+// Function to get time difference
+function getTimeDifference(selectedDate) {
+    return selectedDate - Date.now();
+}
+
 // function startCountdoun()
 
 // Timer initialization
