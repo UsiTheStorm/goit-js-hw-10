@@ -1,0 +1,45 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "extends": ["prettier", "airbnb"],
+  "plugins": ["prettier", "react", "import"],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "rules": {
+    "react/prop-types": 0,
+    "linebreak-style": 0,
+    "global-require": 0,
+    "eslint linebreak-style": [0, "error", "windows"],
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+    // "jsx-a11y/rule-name": 2,
+    "indent": ["error", 4, { "SwitchCase": 1 }], // отступ 4 пробела
+    "no-plusplus": 0, // запрет ++ и --
+    "no-restricted-syntax": 0, //запрет конструкций
+    "no-console": "off",
+    "arrow-body-style": ["error", "as-needed"],
+    // Помилка імпорту
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ]
+  }
+}
