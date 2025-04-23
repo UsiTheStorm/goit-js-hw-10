@@ -1,0 +1,8 @@
+/* Remove blue selection background */
+.flatpickr-calendar {
+  user-select: none; /* Забороняє виділення */
+}
+.flatpickr-time input:focus::selection {
+  background: transparent;
+  color: inherit;
+}
