@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --base=/vanilla-app-template/",
-    "preview": "vite preview"
+    "build": "vite build --base=/goit-js-hw-10/",
+    "preview": "vite preview --base=/goit-js-hw-10/"
   },
   "devDependencies": {
     "glob": "^11.0.0",
@@ -14,7 +14,7 @@
     "postcss-sort-media-queries": "^5.2.0",
     "vite": "^5.4.6"
   },
-  "author": "Alexander Repeta <alexander.repeta@gmail.com>",
+  "author": "UsiTheStorm",
   "license": "ISC",
   "dependencies": {
     "vite-plugin-full-reload": "^1.2.0",
