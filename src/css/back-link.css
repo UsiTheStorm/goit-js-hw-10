@@ -2,11 +2,12 @@
   position: relative;
   display: inline-block;
   padding: 4px 8px;
-  margin-top: 32px;
+  margin: 32px 0;
   border: 1px solid;
   border-radius: 8px;
+  transition: 200ms ease-in;
 }
-.back-link::before {
+/* .back-link::before {
   content: '';
   position: absolute;
   top: 50%;
@@ -22,8 +23,9 @@
   opacity: 0;
   animation: slide 500ms linear infinite alternate-reverse both;
   animation-play-state: paused;
-}
-.back-link:hover::before {
-  opacity: 1;
-  animation-play-state: running;
+} */
+.back-link:hover,
+.back-link:focus {
+  transform: scale(1.06);
+  color: #747bff;
 }
