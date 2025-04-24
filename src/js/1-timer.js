@@ -4,6 +4,8 @@ import 'flatpickr/dist/flatpickr.min.css';
 const startBtn = document.querySelector('[data-start]');
 const stopBtn = document.querySelector('[data-stop]');
 
+const dateInput = document.querySelector('#datetime-picker');
+
 const daysEl = document.querySelector('[data-days]');
 const hoursEl = document.querySelector('[data-hours]');
 const minutesEl = document.querySelector('[data-minutes]');
@@ -72,14 +74,20 @@ function resetTimer() {
     userSelectedDate = null;
     startBtn.disabled = true;
     stopBtn.disabled = true;
+    dateInput.disabled = false;
     updateUi({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+    console.log(timerId);
 }
 
 // Function to start countdown
 function startCountdown() {
     startBtn.disabled = true;
     stopBtn.disabled = false;
-
+    if (timerId !== null) {
+        console.log('Timer alredy run');
+        return;
+    }
+    dateInput.disabled = true;
     timerId = setInterval(() => {
         let msDiff = getMsDifference(userSelectedDate);
         let time = convertMs(msDiff);
