@@ -44,8 +44,8 @@ function pad(value) {
 }
 console.log('Pad:', pad(5));
 
-// Function to get time difference
-function getTimeDifference(selectedDate) {
+// Function to get time difference in milliseconds
+function getMsDifference(selectedDate) {
     return selectedDate - Date.now();
 }
 
@@ -56,7 +56,22 @@ function updateUi({ days, hours, minutes, seconds }) {
     minutesEl.textContent = pad(minutes);
     secondsEl.textContent = pad(seconds);
 }
-// function startCountdoun()
+// Function to start countdown
+function startCountdown() {
+    const timerId = setInterval(() => {
+        let msDiff = getMsDifference(userSelectedDate);
+        let time = convertMs(msDiff);
+        updateUi(time);
+        if (msDiff <= 0) {
+            clearInterval(timerId);
+            console.log('Time is up');
+            window.alert('Time is up');
+            startBtn.disabled = true;
+            stopBtn.disabled = true;
+            updateUi({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        }
+    }, 1000);
+}
 
 // Timer initialization
 const options = {
