@@ -70,7 +70,7 @@ function updateUi({ days, hours, minutes, seconds }) {
 function resetTimer() {
     clearInterval(timerId);
     userSelectedDate = null;
-    startBtn.disabled = false;
+    startBtn.disabled = true;
     stopBtn.disabled = true;
     updateUi({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 }
@@ -85,25 +85,21 @@ function startCountdown() {
         let time = convertMs(msDiff);
         updateUi(time);
         if (msDiff <= 0) {
-            clearInterval(timerId);
+            // clearInterval(timerId);
             console.log('Time is up');
             window.alert('Time is up');
-            startBtn.disabled = true;
-            stopBtn.disabled = true;
-            updateUi({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+            resetTimer();
+            // startBtn.disabled = true;
+            // stopBtn.disabled = true;
+            // updateUi({ days: 0, hours: 0, minutes: 0, seconds: 0 });
         }
     }, 1000);
 }
 
 // Function to stop countdown
 function stopCountdown() {
-    clearInterval(timerId);
-    userSelectedDate = null;
-
-    startBtn.disabled = false;
-    stopBtn.disabled = true;
+    resetTimer();
     console.log('Timer stopped');
-    updateUi({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 }
 
 // Timer initialization
