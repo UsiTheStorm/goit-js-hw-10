@@ -66,6 +66,14 @@ function updateUi({ days, hours, minutes, seconds }) {
     minutesEl.textContent = pad(minutes);
     secondsEl.textContent = pad(seconds);
 }
+// Function to reset timer
+function resetTimer() {
+    clearInterval(timerId);
+    userSelectedDate = null;
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+    updateUi({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+}
 
 // Function to start countdown
 function startCountdown() {
