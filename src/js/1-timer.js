@@ -45,16 +45,11 @@ function convertMs(ms) {
 
     return { days, hours, minutes, seconds };
 }
-console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
-console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
-console.log(convertMs(24140000));
-// console.log(convertMs(userSelectedDate - Date.now())); // {days: 0, hours: 6 minutes: 42, seconds: 20}
 
 // Function to add leading zero
 function pad(value) {
     return value.toString().padStart(2, '0');
 }
-console.log('Pad:', pad(5));
 
 // Function to get time difference in milliseconds
 function getMsDifference(selectedDate) {
@@ -72,11 +67,11 @@ function updateUi({ days, hours, minutes, seconds }) {
 function resetTimer() {
     clearInterval(timerId);
     userSelectedDate = null;
+    timerId = null;
     startBtn.disabled = true;
     stopBtn.disabled = true;
     dateInput.disabled = false;
     updateUi({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-    console.log(timerId);
 }
 
 // Function to start countdown
@@ -93,13 +88,9 @@ function startCountdown() {
         let time = convertMs(msDiff);
         updateUi(time);
         if (msDiff <= 0) {
-            // clearInterval(timerId);
             console.log('Time is up');
             window.alert('Time is up');
             resetTimer();
-            // startBtn.disabled = true;
-            // stopBtn.disabled = true;
-            // updateUi({ days: 0, hours: 0, minutes: 0, seconds: 0 });
         }
     }, 1000);
 }
