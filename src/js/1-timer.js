@@ -13,9 +13,25 @@ const secondsEl = document.querySelector('[data-seconds]');
 
 let userSelectedDate = null;
 let timerId = null;
+const savedDate = localStorage.getItem('countdownDate');
 
 startBtn.disabled = true;
 stopBtn.disabled = true;
+
+// Function to check if there is svaed date from previous
+function checkForSavedDate() {
+    if (savedDate && Number.isFinite(Number(savedDate))) {
+        let parsedDate = new Date(Number(savedDate));
+        if (parsedDate > new Date()) {
+            userSelectedDate = parsedDate;
+            updateUi(convertMs(userSelectedDate - Date.now()));
+            startCountdown();
+        } else {
+            localStorage.removeItem('countdownDate');
+        }
+    }
+}
+checkForSavedDate();
 
 startBtn.addEventListener('click', () => {
     if (!userSelectedDate || userSelectedDate < new Date()) {
@@ -72,17 +88,21 @@ function resetTimer() {
     stopBtn.disabled = true;
     dateInput.disabled = false;
     updateUi({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+    localStorage.removeItem('countdownDate');
 }
 
 // Function to start countdown
 function startCountdown() {
     startBtn.disabled = true;
     stopBtn.disabled = false;
+
     if (timerId !== null) {
         console.log('Timer alredy run');
         return;
     }
+
     dateInput.disabled = true;
+
     timerId = setInterval(() => {
         let msDiff = getMsDifference(userSelectedDate);
         let time = convertMs(msDiff);
@@ -118,7 +138,9 @@ const options = {
         } else {
             startBtn.disabled = false;
             stopBtn.disabled = true;
+            localStorage.setItem('countdownDate', userSelectedDate.getTime());
         }
     },
 };
+
 flatpickr('#datetime-picker', options);
