@@ -1,6 +1,8 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
+import { showSuccessToast } from './utilitis/toasts';
+
 const startBtn = document.querySelector('[data-start]');
 const stopBtn = document.querySelector('[data-stop]');
 
@@ -38,6 +40,7 @@ startBtn.addEventListener('click', () => {
         window.alert('Please choose a date in the future');
     } else {
         startCountdown();
+        showSuccessToast('ololoooooo');
     }
 });
 stopBtn.addEventListener('click', stopCountdown);
