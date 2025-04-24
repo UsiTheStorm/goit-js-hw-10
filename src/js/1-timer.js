@@ -9,10 +9,20 @@ const hoursEl = document.querySelector('[data-hours]');
 const minutesEl = document.querySelector('[data-minutes]');
 const secondsEl = document.querySelector('[data-seconds]');
 
-let userSelectedDate;
+let userSelectedDate = null;
+let timerId = null;
 
 startBtn.disabled = true;
 stopBtn.disabled = true;
+
+startBtn.addEventListener('click', () => {
+    if (!userSelectedDate || userSelectedDate < new Date()) {
+        window.alert('Please choose a date in the future');
+    } else {
+        startCountdown();
+    }
+});
+stopBtn.addEventListener('click', stopCountdown);
 
 // Function to convert milliseconds to days, hours, minutes and seconds
 function convertMs(ms) {
@@ -56,9 +66,13 @@ function updateUi({ days, hours, minutes, seconds }) {
     minutesEl.textContent = pad(minutes);
     secondsEl.textContent = pad(seconds);
 }
+
 // Function to start countdown
 function startCountdown() {
-    const timerId = setInterval(() => {
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+
+    timerId = setInterval(() => {
         let msDiff = getMsDifference(userSelectedDate);
         let time = convertMs(msDiff);
         updateUi(time);
@@ -71,6 +85,17 @@ function startCountdown() {
             updateUi({ days: 0, hours: 0, minutes: 0, seconds: 0 });
         }
     }, 1000);
+}
+
+// Function to stop countdown
+function stopCountdown() {
+    clearInterval(timerId);
+    userSelectedDate = null;
+
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+    console.log('Timer stopped');
+    updateUi({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 }
 
 // Timer initialization
@@ -89,7 +114,7 @@ const options = {
             stopBtn.disabled = true;
         } else {
             startBtn.disabled = false;
-            // stopBtn.disabled = false;
+            stopBtn.disabled = true;
         }
     },
 };
