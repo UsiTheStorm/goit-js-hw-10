@@ -3,6 +3,10 @@ import 'flatpickr/dist/flatpickr.min.css';
 
 import { showSuccessToast, showWarningToast } from './utilitis/toasts';
 
+const TIMER_STATE_IDLE = 'idle';
+const TIMER_STATE_READY = 'ready';
+const TIMER_STATE_RUNNING = 'running';
+
 const startBtn = document.querySelector('[data-start]');
 const stopBtn = document.querySelector('[data-stop]');
 
@@ -20,17 +24,17 @@ const savedDate = Number(localStorage.getItem('countdownDate'));
 startBtn.disabled = true;
 stopBtn.disabled = true;
 
-// Function to check if there is svaed date from previous
+// Function to check if there is saved date from previous
 function checkForSavedDate() {
     if (savedDate && Number.isFinite(savedDate)) {
-        let parsedDate = new Date(Number(savedDate));
-        if (parsedDate > new Date()) {
-            userSelectedDate = parsedDate;
+        let savedDateObject = new Date(Number(savedDate));
+        if (savedDateObject > new Date()) {
+            userSelectedDate = savedDateObject;
             updateUi(convertMs(userSelectedDate - Date.now()));
             startCountdown();
         } else {
             localStorage.removeItem('countdownDate');
-            setTimerState('idle');
+            setTimerState(TIMER_STATE_IDLE);
         }
     } else {
         setTimerState('idle');
@@ -41,20 +45,20 @@ checkForSavedDate();
 // Function to change timer and buttons state
 function setTimerState(state) {
     switch (state) {
-        // Timer is wating for date input / Stopped
-        case 'idle':
+        // Timer is waiting for date input / Stopped
+        case TIMER_STATE_IDLE:
             startBtn.disabled = true;
             stopBtn.disabled = true;
             dateInput.disabled = false;
             break;
         // Timer is ready for running
-        case 'ready':
+        case TIMER_STATE_READY:
             startBtn.disabled = false;
             stopBtn.disabled = true;
             dateInput.disabled = false;
             break;
         // Timer is running
-        case 'running':
+        case TIMER_STATE_RUNNING:
             startBtn.disabled = true;
             stopBtn.disabled = false;
             dateInput.disabled = true;
@@ -124,11 +128,11 @@ function resetTimer() {
 // Function to start countdown
 function startCountdown() {
     if (timerId !== null) {
-        console.log('Timer is already run');
+        console.log('Timer is already running');
         return;
     }
 
-    setTimerState('running');
+    setTimerState(TIMER_STATE_RUNNING);
 
     timerId = setInterval(() => {
         let msDiff = getMsDifference(userSelectedDate);
@@ -155,13 +159,15 @@ const options = {
     defaultDate: new Date(),
     minDate: 'today',
     minuteIncrement: 1,
+    // This function is triggered when the date picker is closed.
+    // It validates the selected date and updates the timer state accordingly.
     onClose(selectedDates) {
         userSelectedDate = selectedDates[0];
         if (userSelectedDate < new Date()) {
             showWarningToast('Please choose a date in the future');
             setTimerState('idle');
         } else {
-            setTimerState('ready');
+            setTimerState(TIMER_STATE_READY);
             localStorage.setItem('countdownDate', userSelectedDate.getTime());
         }
     },
