@@ -1,7 +1,7 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
-import { showSuccessToast } from './utilitis/toasts';
+import { showSuccessToast, showErrorToast, showWarningToast } from './utilitis/toasts';
 
 const startBtn = document.querySelector('[data-start]');
 const stopBtn = document.querySelector('[data-stop]');
@@ -37,10 +37,10 @@ checkForSavedDate();
 
 startBtn.addEventListener('click', () => {
     if (!userSelectedDate || userSelectedDate < new Date()) {
-        window.alert('Please choose a date in the future');
+        showWarningToast('Please choose a date in the future');
     } else {
         startCountdown();
-        showSuccessToast('ololoooooo');
+        showSuccessToast('Countdown started');
     }
 });
 stopBtn.addEventListener('click', stopCountdown);
@@ -112,7 +112,7 @@ function startCountdown() {
         updateUi(time);
         if (msDiff <= 0) {
             console.log('Time is up');
-            window.alert('Time is up');
+            showSuccessToast('Time is up');
             resetTimer();
         }
     }, 1000);
@@ -135,7 +135,7 @@ const options = {
         console.log(selectedDates[0]);
         userSelectedDate = selectedDates[0];
         if (userSelectedDate < new Date()) {
-            window.alert('Please choose a date in the future');
+            showWarningToast('Please choose a date in the future');
             startBtn.disabled = true;
             stopBtn.disabled = true;
         } else {
