@@ -1,7 +1,7 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
-import { showSuccessToast, showErrorToast, showWarningToast } from './utilitis/toasts';
+import { showSuccessToast, showWarningToast } from './utilitis/toasts';
 
 const startBtn = document.querySelector('[data-start]');
 const stopBtn = document.querySelector('[data-stop]');
@@ -30,10 +30,39 @@ function checkForSavedDate() {
             startCountdown();
         } else {
             localStorage.removeItem('countdownDate');
+            setTimerState('idle');
         }
+    } else {
+        setTimerState('idle');
     }
 }
 checkForSavedDate();
+
+// Function to change timer and buttons state
+function setTimerState(state) {
+    switch (state) {
+        // Timer is wating for date input / Stopped
+        case 'idle':
+            startBtn.disabled = true;
+            stopBtn.disabled = true;
+            dateInput.disabled = false;
+            break;
+        // Timer is ready for running
+        case 'ready':
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            dateInput.disabled = false;
+            break;
+        // Timer is running
+        case 'running':
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            dateInput.disabled = true;
+            break;
+        default:
+            console.error('Unknown timer state', state);
+    }
+}
 
 startBtn.addEventListener('click', () => {
     if (!userSelectedDate || userSelectedDate < new Date()) {
@@ -87,24 +116,19 @@ function resetTimer() {
     clearInterval(timerId);
     userSelectedDate = null;
     timerId = null;
-    startBtn.disabled = true;
-    stopBtn.disabled = true;
-    dateInput.disabled = false;
+    setTimerState('idle');
     updateUi({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     localStorage.removeItem('countdownDate');
 }
 
 // Function to start countdown
 function startCountdown() {
-    startBtn.disabled = true;
-    stopBtn.disabled = false;
-
     if (timerId !== null) {
         console.log('Timer is already run');
         return;
     }
 
-    dateInput.disabled = true;
+    setTimerState('running');
 
     timerId = setInterval(() => {
         let msDiff = getMsDifference(userSelectedDate);
@@ -135,11 +159,9 @@ const options = {
         userSelectedDate = selectedDates[0];
         if (userSelectedDate < new Date()) {
             showWarningToast('Please choose a date in the future');
-            startBtn.disabled = true;
-            stopBtn.disabled = true;
+            setTimerState('idle');
         } else {
-            startBtn.disabled = false;
-            stopBtn.disabled = true;
+            setTimerState('ready');
             localStorage.setItem('countdownDate', userSelectedDate.getTime());
         }
     },
