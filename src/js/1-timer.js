@@ -15,14 +15,14 @@ const secondsEl = document.querySelector('[data-seconds]');
 
 let userSelectedDate = null;
 let timerId = null;
-const savedDate = localStorage.getItem('countdownDate');
+const savedDate = Number(localStorage.getItem('countdownDate'));
 
 startBtn.disabled = true;
 stopBtn.disabled = true;
 
 // Function to check if there is svaed date from previous
 function checkForSavedDate() {
-    if (savedDate && Number.isFinite(Number(savedDate))) {
+    if (savedDate && Number.isFinite(savedDate)) {
         let parsedDate = new Date(Number(savedDate));
         if (parsedDate > new Date()) {
             userSelectedDate = parsedDate;
@@ -100,7 +100,7 @@ function startCountdown() {
     stopBtn.disabled = false;
 
     if (timerId !== null) {
-        console.log('Timer alredy run');
+        console.log('Timer is already run');
         return;
     }
 
@@ -132,7 +132,6 @@ const options = {
     minDate: 'today',
     minuteIncrement: 1,
     onClose(selectedDates) {
-        console.log(selectedDates[0]);
         userSelectedDate = selectedDates[0];
         if (userSelectedDate < new Date()) {
             showWarningToast('Please choose a date in the future');
