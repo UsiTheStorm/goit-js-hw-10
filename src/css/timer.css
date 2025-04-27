@@ -7,6 +7,7 @@
   color: inherit;
 }
 
-/* .iziToast {
-  background-color: blueviolet !important;
-} */
+/* Custom iziToast shadow */
+.iziToast:after {
+  box-shadow: 0 8px 8px -5px rgba(0, 0, 0, 0.25) !important;
+}

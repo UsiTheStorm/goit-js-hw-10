@@ -4,15 +4,47 @@ import 'izitoast/dist/css/iziToast.min.css';
 // Function to show a success toast
 export const showSuccessToast = (message) => {
     iziToast.success({
-        title: 'Ok',
-        // backgroundColor: '#6e65e1',
-        // color: '#ea5252',
+        title: '✅',
+        // backgroundColor: '#a6a2e4',
         message: message,
-        position: 'topRight',
-        transitionIn: 'bounceInRight', // Анімація входу (аналогічно bounceInRight класу)
-        transitionOut: 'fadeOut', // Анімація виходу
+        position: 'bottomRight',
+        transitionIn: 'bounceInRight',
+        transitionOut: 'fadeOut',
         progressBar: true,
         theme: 'light',
         animateInside: true,
+        timeout: 5000,
+    });
+};
+
+// Function to show an error toast
+export const showErrorToast = (message) => {
+    iziToast.error({
+        title: '❌',
+        // backgroundColor: '#a6a2e4',
+        message: message,
+        position: 'bottomRight',
+        transitionIn: 'bounceInRight',
+        transitionOut: 'fadeOut',
+        progressBar: true,
+        theme: 'light',
+        animateInside: true,
+        timeout: 5000,
+    });
+};
+
+// Function to show a warning toast
+export const showWarningToast = (message) => {
+    iziToast.warning({
+        title: '⚠️',
+        // backgroundColor: '#a6a2e4',
+        message: message,
+        position: 'bottomRight',
+        transitionIn: 'bounceInRight',
+        transitionOut: 'fadeOut',
+        progressBar: true,
+        theme: 'light',
+        animateInside: true,
+        timeout: 5000,
     });
 };
