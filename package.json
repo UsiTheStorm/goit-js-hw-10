@@ -17,6 +17,7 @@
   "author": "UsiTheStorm",
   "license": "ISC",
   "dependencies": {
+    "canvas-confetti": "^1.9.3",
     "flatpickr": "^4.6.13",
     "izitoast": "^1.4.0",
     "vite-plugin-full-reload": "^1.2.0",

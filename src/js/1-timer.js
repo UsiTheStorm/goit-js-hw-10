@@ -1,6 +1,8 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
+import confetti from 'canvas-confetti';
+
 import { showSuccessToast, showWarningToast } from './utilitis/toasts';
 
 const TIMER_STATE_IDLE = 'idle';
@@ -156,6 +158,11 @@ function startCountdown() {
         if (msDiff <= 0) {
             console.log('Time is up');
             showSuccessToast('Time is up');
+            confetti({
+                particleCount: 100,
+                spread: 100,
+                origin: { y: 0.6 },
+            });
             resetTimer();
             return;
         }
