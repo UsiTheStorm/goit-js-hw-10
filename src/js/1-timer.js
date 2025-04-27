@@ -19,20 +19,26 @@ const secondsEl = document.querySelector('[data-seconds]');
 
 let userSelectedDate = null;
 let timerId = null;
-let savedDate = Number(localStorage.getItem('countdownDate'));
 
 setTimerState(TIMER_STATE_IDLE);
 
 // Function to check if there is saved date from previous
 function checkForSavedDate() {
+    const savedDate = Number(localStorage.getItem('countdownDate'));
+    const isCountdownRunning = localStorage.getItem('isCountdownRunning');
+
     if (savedDate && Number.isFinite(savedDate)) {
         const savedDateObject = new Date(savedDate);
         if (savedDateObject > new Date()) {
             userSelectedDate = savedDateObject;
-            updateUi(convertMs(userSelectedDate - Date.now()));
-            startCountdown();
+            setTimerState(TIMER_STATE_READY);
+            if (isCountdownRunning === 'true') {
+                updateUi(convertMs(userSelectedDate - Date.now()));
+                startCountdown();
+            }
         } else {
             localStorage.removeItem('countdownDate');
+            localStorage.removeItem('isCountdownRunning');
             setTimerState(TIMER_STATE_IDLE);
         }
     } else {
@@ -67,11 +73,22 @@ function setTimerState(state) {
     }
 }
 
+// Function to get saved date or now
+function getSetDateOrNow() {
+    const localSavedDate = Number(localStorage.getItem('countdownDate'));
+    if (localSavedDate && Number.isFinite(localSavedDate)) {
+        return new Date(localSavedDate);
+    } else {
+        return new Date();
+    }
+}
+
 startBtn.addEventListener('click', () => {
     if (!userSelectedDate || userSelectedDate < new Date()) {
         showWarningToast('Please choose a date in the future');
     } else {
         startCountdown();
+        localStorage.setItem('isCountdownRunning', 'true');
         showSuccessToast('Countdown started');
     }
 });
@@ -119,9 +136,10 @@ function resetTimer() {
     clearInterval(timerId);
     userSelectedDate = null;
     timerId = null;
-    setTimerState('idle');
+    setTimerState(TIMER_STATE_IDLE);
     updateUi({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     localStorage.removeItem('countdownDate');
+    localStorage.removeItem('isCountdownRunning');
 }
 
 // Function to start countdown
@@ -156,7 +174,7 @@ function stopCountdown() {
 const options = {
     enableTime: true,
     time_24hr: true,
-    defaultDate: new Date(),
+    defaultDate: getSetDateOrNow(),
     minDate: 'today',
     minuteIncrement: 1,
     // This function is triggered when the date picker is closed.
@@ -165,12 +183,13 @@ const options = {
         userSelectedDate = selectedDates[0];
         if (userSelectedDate < new Date()) {
             showWarningToast('Please choose a date in the future');
-            setTimerState('idle');
+            setTimerState(TIMER_STATE_IDLE);
         } else {
             setTimerState(TIMER_STATE_READY);
             if (localStorage.getItem('countdownDate') !== userSelectedDate.getTime().toString()) {
                 localStorage.setItem('countdownDate', userSelectedDate.getTime());
             }
+            localStorage.setItem('isCountdownRunning', 'false');
         }
     },
 };
