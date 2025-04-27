@@ -19,15 +19,14 @@ const secondsEl = document.querySelector('[data-seconds]');
 
 let userSelectedDate = null;
 let timerId = null;
-const savedDate = Number(localStorage.getItem('countdownDate'));
+let savedDate = Number(localStorage.getItem('countdownDate'));
 
-startBtn.disabled = true;
-stopBtn.disabled = true;
+setTimerState(TIMER_STATE_IDLE);
 
 // Function to check if there is saved date from previous
 function checkForSavedDate() {
     if (savedDate && Number.isFinite(savedDate)) {
-        let savedDateObject = new Date(Number(savedDate));
+        const savedDateObject = new Date(savedDate);
         if (savedDateObject > new Date()) {
             userSelectedDate = savedDateObject;
             updateUi(convertMs(userSelectedDate - Date.now()));
@@ -37,7 +36,7 @@ function checkForSavedDate() {
             setTimerState(TIMER_STATE_IDLE);
         }
     } else {
-        setTimerState('idle');
+        setTimerState(TIMER_STATE_IDLE);
     }
 }
 checkForSavedDate();
@@ -64,7 +63,7 @@ function setTimerState(state) {
             dateInput.disabled = true;
             break;
         default:
-            console.error('Unknown timer state', state);
+            console.error(`Unknown timer state: ${state}`);
     }
 }
 
@@ -99,7 +98,7 @@ function convertMs(ms) {
 }
 
 // Function to add leading zero
-function pad(value) {
+function padWithZero(value) {
     return value.toString().padStart(2, '0');
 }
 
@@ -110,10 +109,10 @@ function getMsDifference(selectedDate) {
 
 // Function to update UI
 function updateUi({ days, hours, minutes, seconds }) {
-    daysEl.textContent = pad(days);
-    hoursEl.textContent = pad(hours);
-    minutesEl.textContent = pad(minutes);
-    secondsEl.textContent = pad(seconds);
+    daysEl.textContent = padWithZero(days);
+    hoursEl.textContent = padWithZero(hours);
+    minutesEl.textContent = padWithZero(minutes);
+    secondsEl.textContent = padWithZero(seconds);
 }
 // Function to reset timer
 function resetTimer() {
@@ -128,7 +127,7 @@ function resetTimer() {
 // Function to start countdown
 function startCountdown() {
     if (timerId !== null) {
-        console.log('Timer is already running');
+        showWarningToast('Timer is already running');
         return;
     }
 
@@ -136,13 +135,14 @@ function startCountdown() {
 
     timerId = setInterval(() => {
         let msDiff = getMsDifference(userSelectedDate);
-        let time = convertMs(msDiff);
-        updateUi(time);
         if (msDiff <= 0) {
             console.log('Time is up');
             showSuccessToast('Time is up');
             resetTimer();
+            return;
         }
+        let time = convertMs(msDiff);
+        updateUi(time);
     }, 1000);
 }
 
@@ -168,7 +168,9 @@ const options = {
             setTimerState('idle');
         } else {
             setTimerState(TIMER_STATE_READY);
-            localStorage.setItem('countdownDate', userSelectedDate.getTime());
+            if (localStorage.getItem('countdownDate') !== userSelectedDate.getTime().toString()) {
+                localStorage.setItem('countdownDate', userSelectedDate.getTime());
+            }
         }
     },
 };
