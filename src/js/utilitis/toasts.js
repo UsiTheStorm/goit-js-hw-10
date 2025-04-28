@@ -37,6 +37,7 @@ export const showWarningToast = (message) => {
     iziToast.warning({
         title: '',
         message,
+        backgroundColor: '#a6a2e4',
         position: 'bottomRight',
         transitionIn: 'bounceInRight',
         transitionOut: 'fadeOut',
