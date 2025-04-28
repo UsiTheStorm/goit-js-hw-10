@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Snackbar</title>
     <script type="module" crossorigin src="/goit-js-hw-10/2-snackbar.js"></script>
-    <link rel="modulepreload" crossorigin href="/goit-js-hw-10/assets/styles-DstMkDFQ.js">
+    <link rel="modulepreload" crossorigin href="/goit-js-hw-10/assets/styles-D-J3MERC.js">
     <link rel="modulepreload" crossorigin href="/goit-js-hw-10/assets/vendor-B1CLq4HH.js">
     <link rel="modulepreload" crossorigin href="/goit-js-hw-10/assets/toasts-C1dDwQNC.js">
-    <link rel="stylesheet" crossorigin href="/goit-js-hw-10/assets/styles-CMhMA8y8.css">
+    <link rel="stylesheet" crossorigin href="/goit-js-hw-10/assets/styles-BljX7r3Z.css">
     <link rel="stylesheet" crossorigin href="/goit-js-hw-10/assets/vendor-CUZofXIC.css">
   </head>
   <body>
@@ -39,25 +39,33 @@
 
 
     <main>
-      <h1 class="main-title">Promise generator</h1>
+      <h1 class="title">Promise generator</h1>
       <!-- Snackbar form -->
-      <form class="form">
-        <div>
-          <label for="delay"> Delay (ms)</label>
-          <input id="delay" type="number" name="delay" required min="0" step="100" />
-        </div>
+      <div class="form-container">
+        <form class="form">
+          <div class="delay-container">
+            <label for="delay"> Delay (ms)</label>
+            <input id="delay" type="number" name="delay" required min="0" step="100" />
+          </div>
 
-        <fieldset>
-          <legend>State</legend>
-          <label for="fulfilled">Fulfilled </label>
-          <input type="radio" name="state" value="fulfilled" required />
+          <fieldset class="state-container">
+            <legend>State</legend>
+            <div class="radio-option-group">
+              <div class="radio-option">
+                <input id="fulfilled" type="radio" name="state" value="fulfilled" required />
+                <label for="fulfilled">Fulfilled </label>
+              </div>
 
-          <label for="rejected">Rejected </label>
-          <input id="rejected" type="radio" name="state" value="rejected" required />
-        </fieldset>
+              <div class="radio-option">
+                <input id="rejected" type="radio" name="state" value="rejected" required />
+                <label for="rejected">Rejected </label>
+              </div>
+            </div>
+          </fieldset>
 
-        <button type="submit">Create notification</button>
-      </form>
+          <button class="form-submit" type="submit">Create notification</button>
+        </form>
+      </div>
 
       <!-- Back button -->
       <a class="back-link" href="./index.html">Go back</a>
