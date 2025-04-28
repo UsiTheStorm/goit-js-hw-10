@@ -12,25 +12,33 @@
     <load src="./partials/header.html" icon-path="./img/sprite.svg#logo" highlight-curr="active" />
 
     <main>
-      <h1 class="main-title">Promise generator</h1>
+      <h1 class="title">Promise generator</h1>
       <!-- Snackbar form -->
-      <form class="form">
-        <div>
-          <label for="delay"> Delay (ms)</label>
-          <input id="delay" type="number" name="delay" required min="0" step="100" />
-        </div>
+      <div class="form-container">
+        <form class="form">
+          <div class="delay-container">
+            <label for="delay"> Delay (ms)</label>
+            <input id="delay" type="number" name="delay" required min="0" step="100" />
+          </div>
 
-        <fieldset>
-          <legend>State</legend>
-          <label for="fulfilled">Fulfilled </label>
-          <input type="radio" name="state" value="fulfilled" required />
+          <fieldset class="state-container">
+            <legend>State</legend>
+            <div class="radio-option-group">
+              <div class="radio-option">
+                <input id="fulfilled" type="radio" name="state" value="fulfilled" required />
+                <label for="fulfilled">Fulfilled </label>
+              </div>
 
-          <label for="rejected">Rejected </label>
-          <input id="rejected" type="radio" name="state" value="rejected" required />
-        </fieldset>
+              <div class="radio-option">
+                <input id="rejected" type="radio" name="state" value="rejected" required />
+                <label for="rejected">Rejected </label>
+              </div>
+            </div>
+          </fieldset>
 
-        <button type="submit">Create notification</button>
-      </form>
+          <button class="form-submit" type="submit">Create notification</button>
+        </form>
+      </div>
 
       <!-- Back button -->
       <load src="./partials/back-link.html" />
