@@ -23,6 +23,13 @@ form.addEventListener('submit', (evt) => {
     const delayValue = Number(formData.get('delay'));
     const stateValue = formData.get('state');
 
+    if (Number.isNaN(delayValue) || delayValue < 0) {
+        return showErrorToast('Please enter a valid positive delay value.');
+    }
+    if (!stateValue) {
+        return showErrorToast('Please select a promise state (fulfilled or rejected).');
+    }
+
     getPromise(delayValue, stateValue)
         .then((delay) => {
             showSuccessToast(`Fulfilled promise in ${delay}ms`);
