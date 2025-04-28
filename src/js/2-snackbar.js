@@ -5,12 +5,12 @@ const form = document.querySelector('.form');
 
 // Function to get promise result
 function getPromise(delay, state) {
-    return new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
         setTimeout(() => {
             if (state === 'fulfilled') {
-                res(`Fulfilled promise in ${delay}ms`);
+                resolve(delay);
             } else {
-                rej(`Rejected promise in ${delay}ms`);
+                reject(delay);
             }
         }, delay);
     });
@@ -24,10 +24,10 @@ form.addEventListener('submit', (evt) => {
     const stateValue = formData.get('state');
 
     getPromise(delayValue, stateValue)
-        .then((message) => {
-            showSuccessToast(message);
+        .then((delay) => {
+            showSuccessToast(`Fulfilled promise in ${delay}ms`);
         })
-        .catch((message) => {
-            showErrorToast(message);
+        .catch((delay) => {
+            showErrorToast(`Rejected promise in ${delay}ms`);
         });
 });
