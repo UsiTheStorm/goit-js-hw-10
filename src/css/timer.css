@@ -3,11 +3,12 @@
   --hover-accent-color: #9294ff;
   --disabled-color: #c7c7c7;
   --disabled-text-color: #000000;
+  --disabled-opacity: 0.5;
 }
 
 /* Remove blue selection background */
 .flatpickr-calendar {
-  user-select: none; /* Забороняє виділення */
+  user-select: none; /* Prevents selection */
 }
 .flatpickr-time input:focus::selection {
   background: transparent;
@@ -54,7 +55,7 @@
 }
 
 .timer-controls button:disabled {
-  opacity: 0.5;
+  opacity: var(--disabled-opacity);
   background-color: var(--disabled-color);
   border-color: var(--disabled-color);
   color: var(--disabled-text-color);
