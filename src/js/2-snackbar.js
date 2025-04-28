@@ -37,4 +37,5 @@ form.addEventListener('submit', (evt) => {
         .catch((delay) => {
             showErrorToast(`Rejected promise in ${delay}ms`);
         });
+    return;
 });
