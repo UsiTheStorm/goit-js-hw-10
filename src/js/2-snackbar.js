@@ -1,7 +1,5 @@
 import { showSuccessToast, showErrorToast } from './utilitis/toasts';
 
-const delay = document.querySelector('#delay');
-const buttons = document.querySelectorAll('button[name="state"]');
 const form = document.querySelector('.form');
 
 form.addEventListener('submit', (evt) => {
