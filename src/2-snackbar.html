@@ -15,21 +15,18 @@
       <h1 class="main-title">Promise generator</h1>
       <!-- Snackbar form -->
       <form class="form">
-        <label>
-          Delay (ms)
-          <input type="number" name="delay" required />
-        </label>
+        <div>
+          <label for="delay"> Delay (ms)</label>
+          <input id="delay" type="number" name="delay" required />
+        </div>
 
         <fieldset>
           <legend>State</legend>
-          <label>
-            <input type="radio" name="state" value="fulfilled" required />
-            Fulfilled
-          </label>
-          <label>
-            <input type="radio" name="state" value="rejected" required />
-            Rejected
-          </label>
+          <label for="fulfilled">Fulfilled </label>
+          <input type="radio" name="state" value="fulfilled" required />
+
+          <label for="rejected">Rejected </label>
+          <input id="rejected" type="radio" name="state" value="rejected" required />
         </fieldset>
 
         <button type="submit">Create notification</button>
