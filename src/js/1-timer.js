@@ -11,9 +11,7 @@ const TIMER_STATE_RUNNING = 'running';
 
 const startBtn = document.querySelector('[data-start]');
 const stopBtn = document.querySelector('[data-stop]');
-
 const dateInput = document.querySelector('#datetime-picker');
-
 const daysEl = document.querySelector('[data-days]');
 const hoursEl = document.querySelector('[data-hours]');
 const minutesEl = document.querySelector('[data-minutes]');
@@ -22,9 +20,117 @@ const secondsEl = document.querySelector('[data-seconds]');
 let userSelectedDate = null;
 let timerId = null;
 
-setTimerState(TIMER_STATE_IDLE);
+//! --- Functions ---
 
-// Function to check if there is saved date from previous
+// Pad single digits with a leading zero
+function padWithZero(value) {
+    return value.toString().padStart(2, '0');
+}
+
+// Convert milliseconds to DHMS format
+function convertMs(ms) {
+    const second = 1000;
+    const minute = second * 60;
+    const hour = minute * 60;
+    const day = hour * 24;
+
+    const days = Math.floor(ms / day);
+    const hours = Math.floor((ms % day) / hour);
+    const minutes = Math.floor(((ms % day) % hour) / minute);
+    const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+
+    return { days, hours, minutes, seconds };
+}
+
+// Get time difference in milliseconds
+function getMsDifference(selectedDate) {
+    return selectedDate - Date.now();
+}
+
+// Update the timer display in the UI
+function updateUi({ days, hours, minutes, seconds }) {
+    daysEl.textContent = padWithZero(days);
+    hoursEl.textContent = padWithZero(hours);
+    minutesEl.textContent = padWithZero(minutes);
+    secondsEl.textContent = padWithZero(seconds);
+}
+
+// Manage button and input states
+function setTimerState(state) {
+    switch (state) {
+        case TIMER_STATE_IDLE:
+            startBtn.disabled = true;
+            stopBtn.disabled = true;
+            dateInput.disabled = false;
+            break;
+        case TIMER_STATE_READY:
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            dateInput.disabled = false;
+            break;
+        case TIMER_STATE_RUNNING:
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            dateInput.disabled = true;
+            break;
+        default:
+            console.error(`Unknown timer state: ${state}`);
+    }
+}
+
+// Reset timer state and UI
+function resetTimer() {
+    clearInterval(timerId);
+    userSelectedDate = null;
+    timerId = null;
+    setTimerState(TIMER_STATE_IDLE);
+    updateUi({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+    localStorage.removeItem('countdownDate');
+    localStorage.removeItem('isCountdownRunning');
+}
+
+// Start the countdown timer
+function startCountdown() {
+    if (timerId !== null) {
+        showWarningToast('Timer is already running');
+        return;
+    }
+
+    setTimerState(TIMER_STATE_RUNNING);
+
+    timerId = setInterval(() => {
+        const msDiff = getMsDifference(userSelectedDate);
+        if (msDiff <= 0) {
+            console.log('Time is up');
+            showSuccessToast('Time is up');
+            confetti({
+                particleCount: 100,
+                spread: 100,
+                origin: { y: 0.6 },
+            });
+            resetTimer();
+            return;
+        }
+        const time = convertMs(msDiff);
+        updateUi(time);
+    }, 1000);
+}
+
+// Stop the countdown timer
+function stopCountdown() {
+    resetTimer();
+    console.log('Timer stopped');
+}
+
+// Get saved date from localStorage or current date
+function getSetDateOrNow() {
+    const localSavedDate = Number(localStorage.getItem('countdownDate'));
+    return localSavedDate && Number.isFinite(localSavedDate)
+        ? new Date(localSavedDate)
+        : new Date();
+}
+
+// Check and restore saved state from previous session
 function checkForSavedDate() {
     const savedDate = Number(localStorage.getItem('countdownDate'));
     const isCountdownRunning = localStorage.getItem('isCountdownRunning');
@@ -47,44 +153,16 @@ function checkForSavedDate() {
         setTimerState(TIMER_STATE_IDLE);
     }
 }
+
+//! --- Initialization ---
+
+// Initial setup of button/input state
+setTimerState(TIMER_STATE_IDLE);
+
+// Check for and restore saved timer state
 checkForSavedDate();
 
-// Function to change timer and buttons state
-function setTimerState(state) {
-    switch (state) {
-        // Timer is waiting for date input / Stopped
-        case TIMER_STATE_IDLE:
-            startBtn.disabled = true;
-            stopBtn.disabled = true;
-            dateInput.disabled = false;
-            break;
-        // Timer is ready for running
-        case TIMER_STATE_READY:
-            startBtn.disabled = false;
-            stopBtn.disabled = true;
-            dateInput.disabled = false;
-            break;
-        // Timer is running
-        case TIMER_STATE_RUNNING:
-            startBtn.disabled = true;
-            stopBtn.disabled = false;
-            dateInput.disabled = true;
-            break;
-        default:
-            console.error(`Unknown timer state: ${state}`);
-    }
-}
-
-// Function to get saved date or now
-function getSetDateOrNow() {
-    const localSavedDate = Number(localStorage.getItem('countdownDate'));
-    if (localSavedDate && Number.isFinite(localSavedDate)) {
-        return new Date(localSavedDate);
-    } else {
-        return new Date();
-    }
-}
-
+// Add event listeners to buttons
 startBtn.addEventListener('click', () => {
     if (!userSelectedDate || userSelectedDate < new Date()) {
         showWarningToast('Please choose a date in the future');
@@ -96,104 +174,25 @@ startBtn.addEventListener('click', () => {
 });
 stopBtn.addEventListener('click', stopCountdown);
 
-// Function to convert milliseconds to days, hours, minutes and seconds
-function convertMs(ms) {
-    // Number of milliseconds per unit of time
-    const second = 1000;
-    const minute = second * 60;
-    const hour = minute * 60;
-    const day = hour * 24;
-
-    // Remaining days
-    const days = Math.floor(ms / day);
-    // Remaining hours
-    const hours = Math.floor((ms % day) / hour);
-    // Remaining minutes
-    const minutes = Math.floor(((ms % day) % hour) / minute);
-    // Remaining seconds
-    const seconds = Math.floor((((ms % day) % hour) % minute) / second);
-
-    return { days, hours, minutes, seconds };
-}
-
-// Function to add leading zero
-function padWithZero(value) {
-    return value.toString().padStart(2, '0');
-}
-
-// Function to get time difference in milliseconds
-function getMsDifference(selectedDate) {
-    return selectedDate - Date.now();
-}
-
-// Function to update UI
-function updateUi({ days, hours, minutes, seconds }) {
-    daysEl.textContent = padWithZero(days);
-    hoursEl.textContent = padWithZero(hours);
-    minutesEl.textContent = padWithZero(minutes);
-    secondsEl.textContent = padWithZero(seconds);
-}
-// Function to reset timer
-function resetTimer() {
-    clearInterval(timerId);
-    userSelectedDate = null;
-    timerId = null;
-    setTimerState(TIMER_STATE_IDLE);
-    updateUi({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-    localStorage.removeItem('countdownDate');
-    localStorage.removeItem('isCountdownRunning');
-}
-
-// Function to start countdown
-function startCountdown() {
-    if (timerId !== null) {
-        showWarningToast('Timer is already running');
-        return;
-    }
-
-    setTimerState(TIMER_STATE_RUNNING);
-
-    timerId = setInterval(() => {
-        let msDiff = getMsDifference(userSelectedDate);
-        if (msDiff <= 0) {
-            console.log('Time is up');
-            showSuccessToast('Time is up');
-            confetti({
-                particleCount: 100,
-                spread: 100,
-                origin: { y: 0.6 },
-            });
-            resetTimer();
-            return;
-        }
-        let time = convertMs(msDiff);
-        updateUi(time);
-    }, 1000);
-}
-
-// Function to stop countdown
-function stopCountdown() {
-    resetTimer();
-    console.log('Timer stopped');
-}
-
-// Timer initialization
+// Flatpickr Options and Initialization
 const options = {
     enableTime: true,
     time_24hr: true,
     defaultDate: getSetDateOrNow(),
     minDate: 'today',
-    minuteIncrement: 1,
-    // This function is triggered when the date picker is closed.
-    // It validates the selected date and updates the timer state accordingly.
+    minuteIncrement: 1, // Flatpickr onClose handler
     onClose(selectedDates) {
-        userSelectedDate = selectedDates[0];
+        // Use array destructuring for the selected date
+        [userSelectedDate] = selectedDates;
+
         if (userSelectedDate < new Date()) {
             showWarningToast('Please choose a date in the future');
             setTimerState(TIMER_STATE_IDLE);
+            localStorage.removeItem('countdownDate');
+            localStorage.removeItem('isCountdownRunning');
         } else {
             setTimerState(TIMER_STATE_READY);
-            if (localStorage.getItem('countdownDate') !== userSelectedDate.getTime().toString()) {
+            if (Number(localStorage.getItem('countdownDate')) !== userSelectedDate.getTime()) {
                 localStorage.setItem('countdownDate', userSelectedDate.getTime());
             }
             localStorage.setItem('isCountdownRunning', 'false');
@@ -201,4 +200,5 @@ const options = {
     },
 };
 
+// Initialize Flatpickr on the date input element
 flatpickr('#datetime-picker', options);
