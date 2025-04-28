@@ -1,45 +1,71 @@
 {
+  // Налаштування оточення, в якому виконується код
   "env": {
-    "browser": true,
-    "es2021": true
+    "browser": true, // Дозволяє використовувати глобальні змінні браузера (window, document тощо)
+    "es2021": true, // Додає підтримку глобальних змінних та синтаксису ECMAScript 2021
+    "node": false // Явно вимикаємо Node.js оточення, оскільки це фронтенд код для браузера
   },
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
-  },
-  "extends": ["prettier", "airbnb"],
-  "plugins": ["prettier", "react", "import"],
+
+  // Розширення існуючих конфігурацій
+  // Порядок важливий:
+  // 1. airbnb-base: Застосовує правила стилю Airbnb (БЕЗ правил для React).
+  // 2. plugin:prettier/recommended: Включає eslint-plugin-prettier і налаштовує його на запуск Prettier,
+  //    а також відключає правила ESLint, що конфліктують з Prettier.
+  "extends": ["airbnb-base", "plugin:prettier/recommended"],
+
+  // Плагіни ESLint, які надають додаткові правила
+  "plugins": [
+    "import" // Плагін для перевірки імпортів/експортів (використовується airbnb-base)
+    // "prettier" // Цей плагін вже налаштований extend-ом "plugin:prettier/recommended", його окремо вказувати не потрібно
+  ],
+
+  // Налаштування парсера коду
   "parserOptions": {
-    "ecmaVersion": "latest",
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true
-    }
+    "ecmaVersion": "latest", // Дозволяє використовувати синтаксис останньої версії ECMAScript
+    "sourceType": "module" // Вказує, що код використовує ES модулі (import/export)
+    // "ecmaFeatures": { // Видаляємо налаштування, пов'язані з JSX (React), якщо вони були
+    //   "jsx": true
+    // }
   },
+
+  // Власні правила або перевизначення правил з extends
+  // Тут ти можеш додати правила зі своєї старої конфігурації, які хочеш зберегти,
+  // або які не перекриваються airbnb-base чи prettier.
   "rules": {
-    "react/prop-types": 0,
-    "linebreak-style": 0,
-    "global-require": 0,
-    "eslint linebreak-style": [0, "error", "windows"],
-    "react/jsx-uses-react": "error",
-    "react/jsx-uses-vars": "error",
-    // "jsx-a11y/rule-name": 2,
-    "indent": ["error", 4, { "SwitchCase": 1 }], // отступ 4 пробела
-    "no-plusplus": 0, // запрет ++ и --
-    "no-restricted-syntax": 0, //запрет конструкций
-    "no-console": "off",
-    "arrow-body-style": ["error", "as-needed"],
-    // Помилка імпорту
+    // --- Правила, які ти відключав або змінював у старій конфігурації ---
+
+    // Правила імпорту (з eslint-plugin-import)
     "import/extensions": [
+      // Налаштування, які розширення файлів дозволені при імпорті
       "error",
       "ignorePackages",
       {
-        "js": "never",
-        "jsx": "never",
-        "ts": "never",
-        "tsx": "never"
+        "js": "never"
+        // "jsx": "never", // Прибираємо, якщо не використовуємо JSX
+        // "ts": "never",  // Прибираємо, якщо не використовуємо TypeScript
+        // "tsx": "never"  // Прибираємо, якщо не використовуємо TypeScript/React
       }
-    ]
+    ],
+    // Це правило з airbnb-base вимагає вказувати розширення для локальних файлів,
+    // конфліктує з налаштуванням "js": "never" вище. Відключаємо його.
+    "import/no-extraneous-dependencies": "off",
+
+    // Правила, пов'язані з потенційно небезпечними або застарілими конструкціями
+    "global-require": "off", // Дозволити використання require() (більше актуально для Node.js)
+    "no-plusplus": "off", // Дозволити використання операторів ++ та --
+    "no-restricted-syntax": "off", // Відключає заборону на певні синтаксичні конструкції (як for...of, for...in)
+    "no-console": "off", // Дозволити використання console.log()
+
+    // Стилістичні правила та правила форматування (контролюються Prettier)
+    // Правила на кшталт "indent", "quotes", "semi", "linebreak-style"
+    // вимкнені конфігурацією "plugin:prettier/recommended".
+
+    // Інші правила зі старої конфігурації або airbnb-base
+    "arrow-body-style": ["error", "as-needed"] // Вимагати скорочену форму стрілочних функцій
+
+    // --- React правила (Видалені повністю) ---
+    // "react/prop-types": "off",
+    // "react/jsx-uses-react": "error",
+    // "react/jsx-uses-vars": "error",
   }
 }
