@@ -6,7 +6,7 @@ export const showSuccessToast = (message) => {
     iziToast.success({
         title: '✅',
         // backgroundColor: '#a6a2e4',
-        message: message,
+        message,
         position: 'bottomRight',
         transitionIn: 'bounceInRight',
         transitionOut: 'fadeOut',
@@ -21,8 +21,7 @@ export const showSuccessToast = (message) => {
 export const showErrorToast = (message) => {
     iziToast.error({
         title: '❌',
-        // backgroundColor: '#a6a2e4',
-        message: message,
+        message,
         position: 'bottomRight',
         transitionIn: 'bounceInRight',
         transitionOut: 'fadeOut',
@@ -36,9 +35,8 @@ export const showErrorToast = (message) => {
 // Function to show a warning toast
 export const showWarningToast = (message) => {
     iziToast.warning({
-        title: '⚠️',
-        // backgroundColor: '#a6a2e4',
-        message: message,
+        title: '',
+        message,
         position: 'bottomRight',
         transitionIn: 'bounceInRight',
         transitionOut: 'fadeOut',
