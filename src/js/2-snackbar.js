@@ -23,6 +23,7 @@ form.addEventListener('submit', (evt) => {
     const delayValue = Number(formData.get('delay'));
     const stateValue = formData.get('state');
 
+    // Checks for valid values
     if (Number.isNaN(delayValue) || delayValue < 0) {
         return showErrorToast('Please enter a valid positive delay value.');
     }
